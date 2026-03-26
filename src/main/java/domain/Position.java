@@ -11,23 +11,23 @@ public class Position {
     private final int y;
 
     public Position(int x, int y) {
-//        validateBoardSize(x, y);
+        validateBoardSize(x, y);
         this.x = x;
         this.y = y;
     }
 
     private void validateBoardSize(int x, int y){
-        if (x<MIN_ROW_COL || x>MAX_ROW || y<MIN_ROW_COL || y>MAX_COL){
+        if (x < MIN_ROW_COL || x > MAX_ROW || y < MIN_ROW_COL || y > MAX_COL) {
             throw new IndexOutOfBoundsException("좌표 범위를 벗어났습니다.");
         }
     }
 
-    public Position getNextUpDownPosition(){
-        return new Position(x+1, y);
+    public int getX() {
+        return x;
     }
 
-    public Position getNextLeftRightPosition(){
-        return new Position(x, y+1);
+    public int getY() {
+        return y;
     }
 
     @Override

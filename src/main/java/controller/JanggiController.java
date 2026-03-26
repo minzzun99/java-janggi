@@ -2,6 +2,7 @@ package controller;
 
 import domain.Board;
 import domain.Country;
+import domain.JanggiGame;
 import java.util.function.Supplier;
 
 //import domain.MaSangPosition;
@@ -25,12 +26,11 @@ public class JanggiController {
     }
 
     public void run() {
-        init();
-
+        JanggiGame janggiGame = new JanggiGame(init());
 
     }
 
-    private void init() {
+    private Board init() {
         outputView.printGameStartMessage();
         outputView.printCountry(Country.CHO);
         int choMasangChoice = doRetry(inputView::requestMaSangPosition);
@@ -43,6 +43,8 @@ public class JanggiController {
 
         BoardDto boardDto = janggiService.getBoard(board);
         outputView.printBoard(boardDto);
+
+        return board;
     }
 
 

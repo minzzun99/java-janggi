@@ -1,5 +1,9 @@
 package domain;
 
+import domain.state.ChoTurn;
+import domain.state.Finished;
+import domain.state.State;
+
 public class JanggiGame {
     private final Board board;
     private State state;
@@ -9,9 +13,13 @@ public class JanggiGame {
         this.state = new ChoTurn();
     }
 
-    public void play() {
-        // TODO : 보드 한턴 진행
-        this.state = state.changeTurn();
+    public Country play() {
+        while (!(state instanceof Finished)) {
+            // TODO : 각 상태별로 ????? 입력은요?????????
+            this.state = state.changeTurn();
+        }
+        // 이긴 나라 반환
+        return state.getCountry();
     }
 
     public Country getCountry() {
