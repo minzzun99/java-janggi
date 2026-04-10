@@ -3,22 +3,12 @@ package domain;
 import domain.constant.Country;
 import domain.constant.PieceType;
 import java.util.List;
-import java.util.Objects;
 
-public class Piece {
+public record Piece(
+        Country country,
+        PieceType pieceType
+) {
     private static final Piece EMPTY = new Piece(Country.NONE, PieceType.NONE);
-
-    private final Country country;
-    private final PieceType pieceType;
-
-    public Piece(Country country, PieceType pieceType) {
-        this.country = country;
-        this.pieceType = pieceType;
-    }
-
-    public PieceType getPieceType() {
-        return pieceType;
-    }
 
     public boolean canMovePosition(Position start, Position end) {
         return pieceType.canMovePosition(start, end, this);
@@ -30,10 +20,6 @@ public class Piece {
 
     public boolean isDifferentCountry(Country endCountry) {
         return !country.equals(endCountry);
-    }
-
-    public Country getCountry() {
-        return country;
     }
 
     public boolean isEmpty() {
@@ -54,13 +40,10 @@ public class Piece {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Piece piece = (Piece) o;
         return country == piece.country && pieceType == piece.pieceType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(country, pieceType);
     }
 }

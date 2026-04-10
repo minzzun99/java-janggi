@@ -3,9 +3,9 @@ package domain;
 import java.util.Objects;
 
 public class Position {
-    public static final int MAX_ROW=10;
-    public static final int MAX_COL=9;
-    public static final int MIN_ROW_COL=1;
+    public static final int MAX_ROW = 10;
+    public static final int MAX_COL = 9;
+    public static final int MIN_ROW_COL = 1;
 
     private final int row;
     private final int col;

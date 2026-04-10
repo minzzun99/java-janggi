@@ -13,7 +13,7 @@ public class JolMoveRule implements MoveRule {
         if (Math.abs(diffRow) + Math.abs(diffCol) != 1) {
             return false;
         }
-        if (piece.getCountry().equals(Country.CHO)) {
+        if (piece.country().equals(Country.CHO)) {
             return diffRow >= 0;
         }
         return diffRow <= 0;

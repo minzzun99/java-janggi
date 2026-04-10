@@ -24,14 +24,14 @@ public class Board {
         Piece endPiece = board.getOrDefault(end, Piece.getEmptyPiece());
 
         if (startPiece.isPalacePiece()) {
-            Palace palace = Palace.from(startPiece.getCountry());
+            Palace palace = Palace.from(startPiece.country());
             if (!palace.isPalace(end)) {
                 throw new IllegalArgumentException("장과 사는 궁성 내부에서만 이동 가능합니다.");
             }
         }
 
-        if (!(startPiece.canMovePosition(start, end) && startPiece.isDifferentCountry(endPiece.getCountry())
-                && startPiece.isAvailableRoute(getSameLine(startPiece, start, end), endPiece.getPieceType()))) {
+        if (!(startPiece.canMovePosition(start, end) && startPiece.isDifferentCountry(endPiece.country())
+                && startPiece.isAvailableRoute(getSameLine(startPiece, start, end), endPiece.pieceType()))) {
             throw new IllegalArgumentException("말을 이동할 수 없습니다.");
         }
 
@@ -44,7 +44,7 @@ public class Board {
     }
 
     private List<Piece> getSameLine(Piece startPiece, Position start, Position end) {
-        PieceType pieceType = startPiece.getPieceType();
+        PieceType pieceType = startPiece.pieceType();
         if (pieceType.equals(PieceType.MA)) {
             return getMaRoute(start, end);
         }
@@ -142,7 +142,7 @@ public class Board {
 
     private List<Piece> getDiagonalRoute(Piece startPiece, Position start, Position end) {
         List<Piece> pieces = new ArrayList<>();
-        Palace palace = Palace.from(startPiece.getCountry());
+        Palace palace = Palace.from(startPiece.country());
 
         if (palace.isDiagonalPath(start, end) && Math.abs(end.getRow() - start.getRow()) == 2) {
             Position center = palace.getCenter();
@@ -162,7 +162,7 @@ public class Board {
         if (!board.containsKey(position)) {
             return PieceType.NONE;
         }
-        return board.get(position).getPieceType();
+        return board.get(position).pieceType();
     }
 
     public Map<Position, Piece> getPieces() {
@@ -172,8 +172,8 @@ public class Board {
     public List<Position> getPiecesNowPosition(Country country, PieceType pieceType) {
         List<Position> positions = board.entrySet().stream()
                 .filter(entry ->
-                        entry.getValue().getPieceType() == pieceType &&
-                                entry.getValue().getCountry() == country)
+                        entry.getValue().pieceType() == pieceType &&
+                                entry.getValue().country() == country)
                 .map(Map.Entry::getKey)
                 .toList();
         if (positions.isEmpty()) {
@@ -184,14 +184,14 @@ public class Board {
 
     public double calculateScore(Country country) {
         return board.values().stream()
-                .filter(piece -> piece.getCountry() == country)
+                .filter(piece -> piece.country() == country)
                 .mapToDouble(Piece::getScore)
                 .sum();
     }
 
     private boolean checkJangRemove(Position end) {
         Piece piece = board.getOrDefault(end, Piece.getEmptyPiece());
-        return piece.getPieceType() == PieceType.JANG;
+        return piece.pieceType() == PieceType.JANG;
     }
 
     public boolean checkEndPosition(Position end) {

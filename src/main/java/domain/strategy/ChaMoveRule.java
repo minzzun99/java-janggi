@@ -13,7 +13,7 @@ public class ChaMoveRule implements MoveRule {
         if (start.getRow() == end.getRow() || start.getCol() == end.getCol()) {
             return true;
         }
-        Palace palace = Palace.from(piece.getCountry());
+        Palace palace = Palace.from(piece.country());
         return palace.isDiagonalPath(start, end);
     }
 

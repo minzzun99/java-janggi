@@ -20,8 +20,8 @@ public class ViewFormatter {
         return String.format("%-3s", EMPTY_PIECE);
     }
 
-    public String formatPiece(String pieceColor, String pieceName) {
-        return String.format("%s%-3s%s", pieceColor, pieceName, PieceColor.getColorCode(PieceColor.NONE.name()));
+    public String formatPiece(String pieceColor, String pieceType) {
+        return String.format("%s%-3s%s", pieceColor, PieceName.getPieceName(pieceType), PieceColor.getColorCode(PieceColor.NONE.name()));
     }
 
     public String formatChangeTurn(String countryName) {

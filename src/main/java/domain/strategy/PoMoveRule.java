@@ -13,7 +13,7 @@ public class PoMoveRule implements MoveRule {
         if (start.getRow() == end.getRow() || start.getCol() == end.getCol()) {
             return true;
         }
-        Palace palace = Palace.from(piece.getCountry());
+        Palace palace = Palace.from(piece.country());
         return palace.isDiagonalPath(start, end);
     }
 
@@ -23,7 +23,7 @@ public class PoMoveRule implements MoveRule {
             return false;
         }
 
-        if (pieces.getFirst().getPieceType().equals(PieceType.PO)) {
+        if (pieces.getFirst().pieceType().equals(PieceType.PO)) {
             throw new IllegalArgumentException("포는 포를 넘을 수 없습니다.");
         }
 
