@@ -13,14 +13,14 @@ import java.util.List;
 
 public class PieceDao {
     public void savePiecePosition(int gameId, PieceDto pieceDto, PositionDto positionDto) {
-        String sql = "INSERT INTO piece_state (game_id, country, piece_name, row_pos, col_pos) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO piece_state (game_id, country, piece_type, row_pos, col_pos) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             pstmt.setInt(1, gameId);
             pstmt.setString(2, pieceDto.countryName());
-            pstmt.setString(3, pieceDto.pieceName());
+            pstmt.setString(3, pieceDto.pieceType());
             pstmt.setInt(4, positionDto.row());
             pstmt.setInt(5, positionDto.col());
             pstmt.executeUpdate();
@@ -62,7 +62,7 @@ public class PieceDao {
     }
 
     public List<SavedPieceDto> getSavedBoard(int gameId) {
-        String sql = "SELECT country, piece_name, row_pos, col_pos FROM piece_state WHERE game_id = ?";
+        String sql = "SELECT country, piece_type, row_pos, col_pos FROM piece_state WHERE game_id = ?";
         List<SavedPieceDto> savedPieceDtos = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -73,7 +73,7 @@ public class PieceDao {
                     savedPieceDtos.add(
                             new SavedPieceDto(
                                     rs.getString("country"),
-                                    rs.getString("piece_name"),
+                                    rs.getString("piece_type"),
                                     rs.getInt("row_pos"),
                                     rs.getInt("col_pos")));
                 }

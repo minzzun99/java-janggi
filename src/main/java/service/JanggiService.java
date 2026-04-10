@@ -57,8 +57,8 @@ public class JanggiService {
                 .filter(entry -> !entry.getValue().isEmpty())
                 .collect(Collectors.toMap(
                         entry -> new PositionDto(entry.getKey().getRow(), entry.getKey().getCol()),
-                        entry -> new PieceDto(entry.getValue().getCountry().name(),
-                                entry.getValue().getPieceType().getName())
+                        entry -> new PieceDto(entry.getValue().country().name(),
+                                entry.getValue().pieceType().name())
                 ));
         return new BoardDto(pieceDtos);
     }

@@ -43,7 +43,7 @@ public class InputView {
 
     public String requestPiece() {
         System.out.println("\n움작일 기물을 선택해주세요. (예: 졸, 차, 마, 등) : ");
-        return scanner.nextLine();
+        return PieceName.getPieceType(scanner.nextLine());
     }
 
     public int requestStartPiecePosition(int size) {

@@ -143,9 +143,9 @@ public class JanggiController {
 
     private List<PositionDto> requestMovePiece(JanggiGame janggiGame) {
         return doRetry(() -> {
-            PieceType pt = PieceType.from(inputView.requestPiece());
-            List<PositionDto> dtos = janggiService.getPiecePositions(janggiGame, pt);
-            outputView.printPiecePossiblePosition(pt, dtos);
+            PieceType pieceType = PieceType.valueOf(inputView.requestPiece());
+            List<PositionDto> dtos = janggiService.getPiecePositions(janggiGame, pieceType);
+            outputView.printPiecePossiblePosition(pieceType, dtos);
             return dtos;
         });
     }

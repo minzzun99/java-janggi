@@ -43,8 +43,8 @@ public final class BoardFactory {
         Map<Position, Piece> board = new HashMap<>();
         for (SavedPieceDto savedPieceDto : savedPieces) {
             Position position = Position.create(savedPieceDto.row(), savedPieceDto.col());
-            Piece piece = new Piece(Country.getCountry(savedPieceDto.country()), PieceType.from(
-                    savedPieceDto.pieceType()));
+            Piece piece = new Piece(Country.getCountry(savedPieceDto.country()),
+                    PieceType.valueOf(savedPieceDto.pieceType()));
 
             board.put(position, piece);
         }

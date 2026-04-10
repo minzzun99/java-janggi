@@ -68,11 +68,12 @@ public class OutputView {
 
         PieceDto pieceDto = pieces.get(nowPosition);
         boardResult.append(
-                formatter.formatPiece(PieceColor.getColorCode(pieceDto.countryName()), pieceDto.pieceName()));
+                formatter.formatPiece(PieceColor.getColorCode(pieceDto.countryName()), pieceDto.pieceType()));
     }
 
     public void printPiecePossiblePosition(PieceType pieceType, List<PositionDto> positionDtos) {
-        StringBuilder result = new StringBuilder(formatter.formatPossiblePositionHeader(pieceType.getName()));
+        StringBuilder result = new StringBuilder(
+                formatter.formatPossiblePositionHeader(PieceName.getPieceName(pieceType.name())));
         int num = 1;
         for (PositionDto dto : positionDtos) {
             result.append(formatter.formatPossiblePosition(num++, dto.row(), dto.col()));
