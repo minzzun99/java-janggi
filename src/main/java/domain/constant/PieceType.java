@@ -30,10 +30,6 @@
             this.score = score;
         }
 
-        public static PieceType from(String pieceType) {
-            return PieceType.valueOf(pieceType);
-        }
-
         public boolean canMovePosition(Position start, Position end, Piece piece) {
             return moveRule.canMovePosition(start, end, piece);
         }
