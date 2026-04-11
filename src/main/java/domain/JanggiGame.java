@@ -51,8 +51,8 @@ public class JanggiGame {
         return board.calculateScore(Country.HAN) + HAN_BONUS_SCORE;
     }
 
-    public boolean isFinished() {
-        return gameState.isFinished();
+    public boolean isPlaying() {
+        return !gameState.isFinished();
     }
 
     public String getWinnerCountry() {

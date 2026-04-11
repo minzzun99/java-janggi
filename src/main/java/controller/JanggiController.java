@@ -82,7 +82,7 @@ public class JanggiController {
     }
 
     private void playGame(int gameId, Board board, JanggiGame janggiGame) {
-        while (!janggiGame.isFinished()) {
+        while (janggiGame.isPlaying()) {
             outputView.printChangeTurnMessage(janggiGame.getCountry().getName(), janggiGame.calculateScore());
             List<PositionDto> positionDtos = requestMovePiece(janggiGame);
             playTurn(positionDtos, gameId, janggiGame, board);

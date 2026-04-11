@@ -86,7 +86,7 @@ public class JanggiService {
     }
 
     private void updateTurnData(JanggiGame game, int gameId) {
-        if (!game.isFinished()) {
+        if (game.isPlaying()) {
             janggiGameDao.updateTurn(gameId, game.getCountry().name());
         }
     }
