@@ -1,4 +1,4 @@
-import config.DBInitializer;
+import config.DatabaseInitializer;
 import dao.JanggiGameDao;
 import dao.PieceDao;
 import java.util.Scanner;
@@ -18,7 +18,7 @@ public class Application {
         JanggiGameDao janggiGameDao = new JanggiGameDao();
         PieceDao pieceDao = new PieceDao();
 
-        DBInitializer.init();
+        DatabaseInitializer.init();
 
         JanggiService janggiService = new JanggiService(janggiGameDao, pieceDao);
         try{

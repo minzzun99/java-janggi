@@ -7,11 +7,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DBConnection {
+public class ConnectionManager {
     private static final Properties properties = new Properties();
 
     static {
-        try (InputStream input = DBConnection.class.getClassLoader().getResourceAsStream("db.properties")) {
+        try (InputStream input = ConnectionManager.class.getClassLoader().getResourceAsStream("db.properties")) {
             if (input == null) {
                 throw new RuntimeException("resources 폴더에서 db.properties 파일을 찾을 수 없습니다.");
             }

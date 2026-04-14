@@ -1,6 +1,6 @@
 package dao;
 
-import config.DBConnection;
+import config.ConnectionManager;
 import domain.constant.Country;
 import dto.GameRecordDto;
 import dto.SavedGameDto;
@@ -16,7 +16,7 @@ public class JanggiGameDao {
     public int createNewGame(String initialTurn) {
         String sql = "INSERT INTO game_state (turn) VALUES (?)";
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, initialTurn);
@@ -36,7 +36,7 @@ public class JanggiGameDao {
     public void updateTurn(int gameId, String currentTurn) {
         String sql = "UPDATE game_state SET turn = ? WHERE id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             pstmt.setString(1, currentTurn);
@@ -51,7 +51,7 @@ public class JanggiGameDao {
         String sql = "SELECT id, modified_date FROM game_state WHERE is_finished = FALSE";
 
         List<SavedGameDto> savedGameDtos = new ArrayList<>();
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -70,7 +70,7 @@ public class JanggiGameDao {
     public String getSavedTurn(int gameId) {
         String sql = "SELECT turn FROM game_state WHERE id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, gameId);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -88,7 +88,7 @@ public class JanggiGameDao {
     public void finishGame(int gameId, double choScore, double hanScore) {
         String sql = "UPDATE game_state SET is_finished = TRUE, cho_score = ?, han_score = ? WHERE id = ?";
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             pstmt.setDouble(1, choScore);
@@ -104,7 +104,7 @@ public class JanggiGameDao {
         String sql = "SELECT id, turn, cho_score, han_score FROM game_state WHERE is_finished = TRUE";
         List<GameRecordDto> gameRecordDtos = new ArrayList<>();
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 

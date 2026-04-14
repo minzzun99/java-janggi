@@ -6,10 +6,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class DBInitializer {
+public class DatabaseInitializer {
     public static void init() {
-        try (Connection connection = DBConnection.getConnection();
-             InputStream inputStream = DBInitializer.class.getClassLoader().getResourceAsStream("init.sql")) {
+        try (Connection connection = ConnectionManager.getConnection();
+             InputStream inputStream = DatabaseInitializer.class.getClassLoader().getResourceAsStream("init.sql")) {
             if (inputStream == null) {
                 throw new RuntimeException("init.sql 파일을 찾을 수 없습니다.");
             }

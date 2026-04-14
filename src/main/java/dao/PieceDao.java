@@ -1,6 +1,6 @@
 package dao;
 
-import config.DBConnection;
+import config.ConnectionManager;
 import dto.BoardDto;
 import dto.PieceDto;
 import dto.PositionDto;
@@ -17,7 +17,7 @@ public class PieceDao {
     public void savePiecePosition(int gameId, BoardDto boardDto) {
         String sql = "INSERT INTO piece_state (game_id, country, piece_type, row_pos, col_pos) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Map.Entry<PositionDto, PieceDto> entry : boardDto.pieces().entrySet()) {
                 PositionDto positionDto = entry.getKey();
@@ -41,7 +41,7 @@ public class PieceDao {
     public void movePiece(int gameId, int beforeRow, int beforeCol, int afterRow, int afterCol) {
         String sql = "UPDATE piece_state SET row_pos = ?, col_pos = ? WHERE game_id = ? AND row_pos = ? AND col_pos = ?";
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             pstmt.setInt(1, afterRow);
@@ -58,7 +58,7 @@ public class PieceDao {
     public void deletePiece(int gameId, int row, int col) {
         String sql = "DELETE FROM piece_state WHERE game_id = ? AND row_pos = ? AND col_pos = ?";
 
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             pstmt.setInt(1, gameId);
@@ -73,7 +73,7 @@ public class PieceDao {
     public List<SavedPieceDto> getSavedBoard(int gameId) {
         String sql = "SELECT country, piece_type, row_pos, col_pos FROM piece_state WHERE game_id = ?";
         List<SavedPieceDto> savedPieceDtos = new ArrayList<>();
-        try (Connection connection = DBConnection.getConnection();
+        try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, gameId);
 
