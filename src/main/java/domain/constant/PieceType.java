@@ -38,6 +38,10 @@
             return moveRule.isAvailableRoute(pieces, endPieceType);
         }
 
+        public List<Position> getRoutePosition(Piece startPiece, Position start, Position end) {
+            return moveRule.getRoutePosition(startPiece, start, end);
+        }
+
         public int getScore() {
             return score;
         }
