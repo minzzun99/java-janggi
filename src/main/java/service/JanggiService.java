@@ -36,12 +36,7 @@ public class JanggiService {
 
     public void saveInitBoard(int gameId, Board board) {
         BoardDto boardDto = createBoardDto(board);
-        for (Map.Entry<PositionDto, PieceDto> entry : boardDto.pieces().entrySet()) {
-            PositionDto positionDto = entry.getKey();
-            PieceDto pieceDto = entry.getValue();
-
-            pieceDao.savePiecePosition(gameId, pieceDto, positionDto);
-        }
+        pieceDao.savePiecePosition(gameId, boardDto);
     }
 
     public Board createBoard(List<PieceType> choMaSangChoose, List<PieceType> hanMaSangChoose) {

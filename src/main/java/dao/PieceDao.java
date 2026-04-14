@@ -1,6 +1,7 @@
 package dao;
 
 import config.DBConnection;
+import dto.BoardDto;
 import dto.PieceDto;
 import dto.PositionDto;
 import dto.SavedPieceDto;
@@ -10,20 +11,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PieceDao {
-    public void savePiecePosition(int gameId, PieceDto pieceDto, PositionDto positionDto) {
+    public void savePiecePosition(int gameId, BoardDto boardDto) {
         String sql = "INSERT INTO piece_state (game_id, country, piece_type, row_pos, col_pos) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Map.Entry<PositionDto, PieceDto> entry : boardDto.pieces().entrySet()) {
+                PositionDto positionDto = entry.getKey();
+                PieceDto pieceDto = entry.getValue();
 
-            pstmt.setInt(1, gameId);
-            pstmt.setString(2, pieceDto.countryName());
-            pstmt.setString(3, pieceDto.pieceType());
-            pstmt.setInt(4, positionDto.row());
-            pstmt.setInt(5, positionDto.col());
-            pstmt.executeUpdate();
+                pstmt.setInt(1, gameId);
+                pstmt.setString(2, pieceDto.countryName());
+                pstmt.setString(3, pieceDto.pieceType());
+                pstmt.setInt(4, positionDto.row());
+                pstmt.setInt(5, positionDto.col());
+
+                pstmt.addBatch();
+            }
+
+            pstmt.executeBatch();
         } catch (SQLException e) {
             System.out.println("보드 상태 저장 중 에러 발생: " + e.getMessage());
         }
