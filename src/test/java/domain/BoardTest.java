@@ -128,4 +128,40 @@ class BoardTest {
         assertThatCode(() -> board.move(Position.create(1, 4), Position.create(2, 5)))
                 .doesNotThrowAnyException();
     }
+
+    @Test
+    void 차_이동경로_장애물_존재_예외_테스트(){
+        List<PieceType> pieces = BoardTestUtil.createSangMaSangMa();
+        Board board = new Board(pieces, pieces);
+
+        assertThatThrownBy(() -> board.move(Position.create(1,1), Position.create(1,5)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("말을 이동할 수 없습니다.");
+    }
+
+    @Test
+    void 마_이동경로_멱_존재_예외_테스트(){
+        List<PieceType> pieces = BoardTestUtil.createSangMaSangMa();
+        Board board = new Board(pieces, pieces);
+
+        board.move(Position.create(1,1), Position.create(2,1));
+        board.move(Position.create(2,1), Position.create(2,3));
+
+        assertThatThrownBy(() -> board.move(Position.create(1,3), Position.create(3,4)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("말을 이동할 수 없습니다.");
+    }
+
+    @Test
+    void 상_이동경로_멱_존재_예외_테스트(){
+        List<PieceType> pieces = BoardTestUtil.createSangMaSangMa();
+        Board board = new Board(pieces, pieces);
+
+        board.move(Position.create(1,1), Position.create(2,1));
+        board.move(Position.create(2,1), Position.create(2,2));
+
+        assertThatThrownBy(() -> board.move(Position.create(1,2), Position.create(4,4)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("말을 이동할 수 없습니다.");
+    }
 }
