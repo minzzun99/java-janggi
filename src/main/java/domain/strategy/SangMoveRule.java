@@ -23,6 +23,7 @@ public class SangMoveRule implements MoveRule {
 
     @Override
     public List<Position> getRoutePosition(Piece startPiece, Position start, Position end) {
+        List<Position> positions = new ArrayList<>();
         int diffRow = end.getRow() - start.getRow();
         int diffCol = end.getCol() - start.getCol();
 
@@ -32,24 +33,18 @@ public class SangMoveRule implements MoveRule {
         } else {
             position = Position.create(start.getRow() + (diffRow / 2), start.getCol() + (diffCol / 3 * 2));
         }
-
-        List<Position> positions = getMaRoutePosition(start, position);
-        positions.add(position);
+        positions.add(getMaRoutePosition(start, position));
 
         return positions;
     }
 
-    public List<Position> getMaRoutePosition(Position start, Position end) {
-        List<Position> positions = new ArrayList<>();
+    public Position getMaRoutePosition(Position start, Position end) {
         int diffRow = end.getRow() - start.getRow();
         int diffCol = end.getCol() - start.getCol();
 
         if (Math.abs(diffRow) == 2) {
-            positions.add(Position.create(start.getRow() + (diffRow / 2), start.getCol()));
-        } else {
-            positions.add(Position.create(start.getRow(), start.getCol() + (diffCol / 2)));
+            return Position.create(start.getRow() + (diffRow / 2), start.getCol());
         }
-
-        return positions;
+        return Position.create(start.getRow(), start.getCol() + (diffCol / 2));
     }
 }
