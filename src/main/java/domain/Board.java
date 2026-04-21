@@ -23,24 +23,40 @@ public class Board {
         Piece startPiece = board.getOrDefault(start, Piece.getEmptyPiece());
         Piece endPiece = board.getOrDefault(end, Piece.getEmptyPiece());
 
+        validateMove(start, end, startPiece, endPiece);
+
+        boolean isJangRemoved = checkJangRemoved(end);
+        movePiece(start, end, startPiece);
+
+        return isJangRemoved;
+    }
+
+    private void validateMove(Position start, Position end, Piece startPiece, Piece endPiece) {
         if (startPiece.isPalacePiece()) {
-            Palace palace = Palace.from(startPiece.country());
-            if (!palace.isPalace(end)) {
-                throw new IllegalArgumentException("장과 사는 궁성 내부에서만 이동 가능합니다.");
-            }
+            validatePalaceMove(startPiece, end);
         }
 
-        if (!(startPiece.canMovePosition(start, end) && startPiece.isDifferentCountry(endPiece.country())
-                && startPiece.isAvailableRoute(getPieceRoute(startPiece, start, end), endPiece.pieceType()))) {
+        if (!canMove(startPiece, start, end, endPiece)) {
             throw new IllegalArgumentException("말을 이동할 수 없습니다.");
         }
+    }
 
-        boolean isEnd = checkJangRemove(end);
+    private void validatePalaceMove(Piece piece, Position end) {
+        Palace palace = Palace.from(piece.country());
+        if (!palace.isPalace(end)) {
+            throw new IllegalArgumentException("장과 사는 궁성 내부에서만 이동 가능합니다.");
+        }
+    }
+
+    private boolean canMove(Piece startPiece, Position start, Position end, Piece endPiece) {
+        return startPiece.canMovePosition(start, end)
+                && startPiece.isDifferentCountry(endPiece.country())
+                && startPiece.isAvailableRoute(getPieceRoute(startPiece, start, end), endPiece.pieceType());
+    }
+
+    private void movePiece(Position start, Position end, Piece piece) {
         removePiece(start);
-        removePiece(end);
-        board.put(end, startPiece);
-
-        return isEnd;
+        board.put(end, piece);
     }
 
     private List<Piece> getPieceRoute(Piece startPiece, Position start, Position end) {
@@ -92,7 +108,7 @@ public class Board {
                 .sum();
     }
 
-    private boolean checkJangRemove(Position end) {
+    private boolean checkJangRemoved(Position end) {
         Piece piece = board.getOrDefault(end, Piece.getEmptyPiece());
         return piece.pieceType() == PieceType.JANG;
     }
