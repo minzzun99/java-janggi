@@ -62,15 +62,10 @@ public class Board {
     private List<Piece> getPieceRoute(Piece startPiece, Position start, Position end) {
         PieceType pieceType = startPiece.pieceType();
         List<Position> piecePositions = pieceType.getRoutePosition(startPiece, start, end);
-        List<Piece> pieces = new ArrayList<>();
-
-        for (Position position : piecePositions) {
-            if (board.containsKey(position)) {
-                pieces.add(board.get(position));
-            }
-        }
-
-        return pieces;
+        return piecePositions.stream()
+                .filter(board::containsKey)
+                .map(board::get)
+                .toList();
     }
 
     private void removePiece(Position endPosition) {
