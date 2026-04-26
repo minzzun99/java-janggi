@@ -4,6 +4,7 @@ import dao.PieceDao;
 import java.util.Scanner;
 
 import controller.JanggiController;
+import repository.JanggiGameRepository;
 import service.JanggiService;
 import view.InputView;
 import view.OutputView;
@@ -20,7 +21,7 @@ public class Application {
 
         DatabaseInitializer.init();
 
-        JanggiService janggiService = new JanggiService(janggiGameDao, pieceDao);
+        JanggiService janggiService = new JanggiService(new JanggiGameRepository(janggiGameDao, pieceDao));
         try{
             JanggiController janggiController = new JanggiController (inputView, outputView, janggiService);
             janggiController.run();

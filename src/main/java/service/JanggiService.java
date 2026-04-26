@@ -1,7 +1,6 @@
 package service;
 
-import dao.JanggiGameDao;
-import dao.PieceDao;
+import config.ConnectionManager;
 import domain.Board;
 import domain.BoardFactory;
 import domain.JanggiGame;
@@ -16,27 +15,28 @@ import dto.PieceDto;
 import dto.PositionDto;
 import dto.SavedGameDto;
 import dto.SavedPieceDto;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import repository.GameRepository;
 
 public class JanggiService {
-    private final JanggiGameDao janggiGameDao;
-    private final PieceDao pieceDao;
+    private final GameRepository gameRepository;
 
-    public JanggiService(JanggiGameDao janggiGameDao, PieceDao pieceDao) {
-        this.janggiGameDao = janggiGameDao;
-        this.pieceDao = pieceDao;
+    public JanggiService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
     }
 
     public int createNewGame(String initialTurn) {
-        return janggiGameDao.createNewGame(initialTurn);
+        return gameRepository.createNewGame(initialTurn);
     }
 
     public void saveInitBoard(int gameId, Board board) {
         BoardDto boardDto = createBoardDto(board);
-        pieceDao.savePiecePosition(gameId, boardDto);
+        gameRepository.saveInitBoard(gameId, boardDto);
     }
 
     public Board createBoard(List<PieceType> choMaSangChoose, List<PieceType> hanMaSangChoose) {
@@ -69,20 +69,30 @@ public class JanggiService {
     public void applyMove(int gameId, Position start, Position end, JanggiGame game) {
         boolean isRemoved = !game.isEmptyPosition(end);
         game.play(start, end);
-        updatePieceData(isRemoved, gameId, start, end);
-        updateTurnData(game, gameId);
-    }
-
-    private void updatePieceData(boolean isRemoved, int gameId, Position start, Position end) {
-        if (isRemoved) {
-            pieceDao.deletePiece(gameId, end.getRow(), end.getCol());
-        }
-        pieceDao.movePiece(gameId, start.getRow(), start.getCol(), end.getRow(), end.getCol());
-    }
-
-    private void updateTurnData(JanggiGame game, int gameId) {
-        if (game.isPlaying()) {
-            janggiGameDao.updateTurn(gameId, game.getCountry().name());
+        Connection connection = null;
+        try {
+            connection = ConnectionManager.getConnection();
+            connection.setAutoCommit(false);
+            gameRepository.saveMove(connection, gameId, start, end, isRemoved, game);
+            connection.commit();
+        } catch (Exception e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException se) {
+                    throw new RuntimeException("롤백 실패");
+                }
+            }
+            throw new RuntimeException("기물 이동 트랜잭션 처리 중 에러 발생");
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                    System.out.println("커넥션 종료 실패");
+                }
+            }
         }
     }
 
@@ -91,25 +101,25 @@ public class JanggiService {
     }
 
     public List<SavedGameDto> getSavedGames() {
-        return janggiGameDao.getSavedGames();
+        return gameRepository.getSavedGames();
     }
 
     public Board getSavedBoard(int gameId) {
-        List<SavedPieceDto> savedPieceDtos = pieceDao.getSavedBoard(gameId);
+        List<SavedPieceDto> savedPieceDtos = gameRepository.getSavedBoard(gameId);
         return new Board(BoardFactory.createLoadBoard(savedPieceDtos));
     }
 
     public JanggiGame loadGame(int gameId, Board board) {
-        Country country = Country.getCountry(janggiGameDao.getSavedTurn(gameId));
+        Country country = Country.getCountry(gameRepository.getSavedTurn(gameId));
         return new JanggiGame(board, country);
     }
 
     public void finishGame(int gameId, JanggiGame janggiGame) {
-        janggiGameDao.finishGame(gameId, janggiGame.calculateChoScore(), janggiGame.calculateHanScore());
+        gameRepository.finishGame(gameId, janggiGame.calculateChoScore(), janggiGame.calculateHanScore());
     }
 
     public List<GameRecordDto> getGameRecords() {
-        return janggiGameDao.getGameRecords();
+        return gameRepository.getGameRecords();
     }
 
     public GameResultDto getGameResult(JanggiGame janggiGame) {
