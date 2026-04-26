@@ -37,7 +37,7 @@ public class JanggiGame {
 
     public double calculateScore() {
         Country country = getCountry();
-        if (country.equals(Country.CHO)) {
+        if (country == Country.CHO) {
             return calculateChoScore();
         }
         return calculateHanScore();

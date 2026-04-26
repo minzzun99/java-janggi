@@ -35,7 +35,7 @@ public record Piece(
     }
 
     public boolean isPalacePiece() {
-        return pieceType.equals(PieceType.SA) || pieceType.equals(PieceType.JANG);
+        return pieceType == PieceType.SA || pieceType == PieceType.JANG;
     }
 
     @Override
